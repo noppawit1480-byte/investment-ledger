@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บันทึกการลงทุน · Personal Ledger</title>
+<meta name="description" content="ศูนย์รวมบันทึกการซื้อขายหุ้น ทอง คริปโตเคอร์เรนซี และสินทรัพย์อื่นๆ จากหลายแหล่ง">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="ledger-bg" aria-hidden="true"></div>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <span class="eyebrow">PERSONAL LEDGER · MULTI-BROKER TRACKER</span>
+      <h1 class="title">บันทึกการลงทุน</h1>
+      <p class="subtitle">รวมประวัติการซื้อหุ้น ทอง และคริปโตเคอร์เรนซี จากทุกแหล่งไว้ในที่เดียว</p>
+    </div>
+
+    <div class="header-actions">
+      <button id="ownerToggleBtn" class="btn btn--ghost" type="button">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <span id="ownerToggleLabel">เข้าสู่ระบบเจ้าของ</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ SUMMARY TICKER ============ -->
+  <section class="summary-strip" id="summaryStrip" aria-label="สรุปพอร์ตการลงทุน">
+    <!-- injected by script.js -->
+  </section>
+
+  <!-- ============ FILTERS ============ -->
+  <section class="controls-row">
+    <div class="filter-tabs" id="filterTabs" role="tablist" aria-label="กรองตามประเภทสินทรัพย์">
+      <button class="filter-tab is-active" data-type="all" role="tab" aria-selected="true">ทั้งหมด</button>
+      <button class="filter-tab" data-type="หุ้น" role="tab" aria-selected="false"><span class="dot dot--stock"></span>หุ้น</button>
+      <button class="filter-tab" data-type="ทอง" role="tab" aria-selected="false"><span class="dot dot--gold"></span>ทอง</button>
+      <button class="filter-tab" data-type="คริปโต" role="tab" aria-selected="false"><span class="dot dot--crypto"></span>คริปโต</button>
+      <button class="filter-tab" data-type="อื่นๆ" role="tab" aria-selected="false"><span class="dot dot--other"></span>อื่นๆ</button>
+    </div>
+    <div class="search-box">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="ค้นหาชื่อสินทรัพย์...">
+    </div>
+  </section>
+
+  <!-- ============ STATE MESSAGES ============ -->
+  <div id="statusMessage" class="status-message" hidden></div>
+
+  <!-- ============ ASSET GRID ============ -->
+  <section class="asset-grid" id="assetGrid" aria-live="polite">
+    <!-- injected by script.js -->
+  </section>
+
+  <div id="emptyState" class="empty-state" hidden>
+    <p>ยังไม่มีรายการในหมวดนี้</p>
+  </div>
+
+  <!-- ============ ALLOCATION ============ -->
+  <section class="allocation-section" id="allocationSection" hidden>
+    <div class="allocation-card">
+      <div class="allocation-head">
+        <h2>สัดส่วนพอร์ต</h2>
+        <span class="allocation-note" id="allocationNote">ตามจำนวนรายการ</span>
+      </div>
+      <div class="allocation-body">
+        <canvas id="allocationChart" width="220" height="220"></canvas>
+        <ul class="allocation-legend" id="allocationLegend"></ul>
+      </div>
+    </div>
+  </section>
+
+  <p class="footnote">
+    ข้อมูลอัปเดตจาก Google Sheets แบบเรียลไทม์ · มุมมองสาธารณะแสดงเฉพาะชื่อและประเภทสินทรัพย์ ไม่แสดงจำนวนเงินหรือมูลค่าที่ถือครอง
+  </p>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <a href="https://noppawit1480-byte.github.io/Portfolio/" class="back-link">← กลับสู่ Portfolio</a>
+  </div>
+</footer>
+
+<!-- ============ OWNER LOGIN MODAL ============ -->
+<div class="modal-overlay" id="modalOverlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" type="button" aria-label="ปิด">✕</button>
+    <div class="modal-vault-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15" r="1.6" fill="currentColor" stroke="none"/></svg>
+    </div>
+    <h2 id="modalTitle">เข้าสู่มุมมองเจ้าของ</h2>
+    <p class="modal-desc">กรอกรหัสผ่านเพื่อดูจำนวนเงิน ต้นทุน และมูลค่าที่ถือครองทั้งหมด</p>
+    <form id="loginForm">
+      <input type="password" id="ownerKeyInput" placeholder="รหัสผ่าน" autocomplete="current-password" required>
+      <button type="submit" class="btn btn--primary btn--block" id="loginSubmitBtn">ปลดล็อก</button>
+    </form>
+    <p class="modal-error" id="modalError" hidden>รหัสผ่านไม่ถูกต้อง ลองอีกครั้ง</p>
+    <div class="stamp" id="unlockStamp" hidden>อนุมัติแล้ว</div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
