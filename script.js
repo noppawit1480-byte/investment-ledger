@@ -5,8 +5,6 @@
    ========================================================= */
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxNgLYErXEeFx4dqw_aZZh6TkBN8ucG6BFExjrp0Du0tK9Jl-O_DB_GTqkjwFCvYjqF/exec";
 
-/* ========================================================= */
-
 const state = {
   items: [],
   isOwner: false,
@@ -43,11 +41,18 @@ const TYPE_COLOR = { "หุ้น": "#5B8DEF", "ทอง": "#C9A227", "คร�
 /* =========================================================
    FORMATTING HELPERS
    ========================================================= */
-function formatCurrency(n) {
+const CURRENCY_SYMBOL = { USD: "$", THB: "฿", EUR: "€", GBP: "£", JPY: "¥" };
+const CURRENCY_LOCALE = { USD: "en-US", THB: "th-TH", EUR: "en-IE", GBP: "en-GB", JPY: "ja-JP" };
+
+// รองรับหลายสกุลเงิน — ค่าเริ่มต้นเป็น THB ถ้าไม่ได้ระบุ (เผื่อรายการเก่าที่ยังไม่มีคอลัมน์สกุลเงิน)
+function formatMoney(n, currency) {
   if (n === undefined || n === null || n === "") return "-";
   const num = Number(n);
   if (Number.isNaN(num)) return "-";
-  return num.toLocaleString("th-TH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const cur = (currency || "THB").toUpperCase();
+  const symbol = CURRENCY_SYMBOL[cur] || cur + " ";
+  const locale = CURRENCY_LOCALE[cur] || "en-US";
+  return symbol + num.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 function formatNumber(n) {
   if (n === undefined || n === null || n === "") return "-";
@@ -193,16 +198,20 @@ function getFilteredItems() {
 function renderSummary() {
   const counts = {};
   TYPE_ORDER.forEach((t) => (counts[t] = 0));
-  let totalCost = 0, totalValue = 0, hasValue = false;
+
+  // รวมยอดแยกตามสกุลเงิน เพราะพอร์ตอาจมีทั้งหุ้น USD และทอง/กองทุน THB ปนกัน
+  // การรวมข้ามสกุลเงินโดยไม่แปลงอัตราแลกเปลี่ยนจะให้ตัวเลขที่ผิด จึงแยกแสดงทีละสกุลเงิน
+  const byCurrency = {}; // { USD: {cost, value}, THB: {cost, value} }
 
   state.items.forEach((it) => {
     if (counts[it.type] !== undefined) counts[it.type]++;
     if (state.isOwner) {
+      const cur = (it.currency || "THB").toUpperCase();
+      if (!byCurrency[cur]) byCurrency[cur] = { cost: 0, value: 0 };
       const cost = Number(it.totalCost) || 0;
       const val = it.currentValue !== undefined && it.currentValue !== "" ? Number(it.currentValue) : cost;
-      totalCost += cost;
-      totalValue += val;
-      if (it.currentValue !== undefined && it.currentValue !== "") hasValue = true;
+      byCurrency[cur].cost += cost;
+      byCurrency[cur].value += val;
     }
   });
 
@@ -216,22 +225,27 @@ function renderSummary() {
   });
 
   if (state.isOwner) {
-    const pl = totalValue - totalCost;
-    const plPct = totalCost > 0 ? (pl / totalCost) * 100 : 0;
-    const plClass = pl > 0 ? "is-gain" : pl < 0 ? "is-loss" : "";
-    html += `
-      <div class="summary-item">
-        <div class="summary-item__label">ลงทุนรวม</div>
-        <div class="summary-item__value">฿${formatCurrency(totalCost)}</div>
-      </div>
-      <div class="summary-item">
-        <div class="summary-item__label">มูลค่าปัจจุบัน</div>
-        <div class="summary-item__value">฿${formatCurrency(totalValue)}</div>
-      </div>
-      <div class="summary-item">
-        <div class="summary-item__label">กำไร/ขาดทุน</div>
-        <div class="summary-item__value ${plClass}">${pl >= 0 ? "+" : ""}฿${formatCurrency(pl)} (${plPct >= 0 ? "+" : ""}${plPct.toFixed(1)}%)</div>
-      </div>`;
+    const currencies = Object.keys(byCurrency).sort((a, b) => (a === "USD" ? -1 : b === "USD" ? 1 : a.localeCompare(b)));
+    currencies.forEach((cur) => {
+      const cost = byCurrency[cur].cost;
+      const value = byCurrency[cur].value;
+      const pl = value - cost;
+      const plPct = cost > 0 ? (pl / cost) * 100 : 0;
+      const plClass = pl > 0 ? "is-gain" : pl < 0 ? "is-loss" : "";
+      html += `
+        <div class="summary-item">
+          <div class="summary-item__label">ลงทุนรวม (${cur})</div>
+          <div class="summary-item__value">${formatMoney(cost, cur)}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item__label">มูลค่าปัจจุบัน (${cur})</div>
+          <div class="summary-item__value">${formatMoney(value, cur)}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item__label">กำไร/ขาดทุน (${cur})</div>
+          <div class="summary-item__value ${plClass}">${pl >= 0 ? "+" : ""}${formatMoney(pl, cur)} (${plPct >= 0 ? "+" : ""}${plPct.toFixed(1)}%)</div>
+        </div>`;
+    });
   }
 
   els.summaryStrip.innerHTML = html;
@@ -247,6 +261,7 @@ function renderCards() {
     .map((it) => {
       let financialsHtml = "";
       if (state.isOwner) {
+        const cur = it.currency || "THB";
         const cost = it.totalCost !== undefined && it.totalCost !== "" ? Number(it.totalCost) : null;
         const val = it.currentValue !== undefined && it.currentValue !== "" ? Number(it.currentValue) : null;
         const pl = cost !== null && val !== null ? val - cost : null;
@@ -254,10 +269,10 @@ function renderCards() {
         financialsHtml = `
           <div class="asset-card__financials">
             <div class="fin-row"><span class="fin-row__label">จำนวน</span><span class="fin-row__value">${formatNumber(it.quantity)}</span></div>
-            <div class="fin-row"><span class="fin-row__label">ราคาต่อหน่วย</span><span class="fin-row__value">฿${formatCurrency(it.unitCost)}</span></div>
-            <div class="fin-row"><span class="fin-row__label">ต้นทุนรวม</span><span class="fin-row__value">฿${formatCurrency(cost)}</span></div>
-            <div class="fin-row"><span class="fin-row__label">มูลค่าปัจจุบัน</span><span class="fin-row__value">${val !== null ? "฿" + formatCurrency(val) : "-"}</span></div>
-            ${pl !== null ? `<div class="fin-row"><span class="fin-row__label">กำไร/ขาดทุน</span><span class="fin-row__value ${plClass}">${pl >= 0 ? "+" : ""}฿${formatCurrency(pl)}</span></div>` : ""}
+            <div class="fin-row"><span class="fin-row__label">ราคาต่อหน่วย</span><span class="fin-row__value">${formatMoney(it.unitCost, cur)}</span></div>
+            <div class="fin-row"><span class="fin-row__label">ต้นทุนรวม</span><span class="fin-row__value">${formatMoney(cost, cur)}</span></div>
+            <div class="fin-row"><span class="fin-row__label">มูลค่าปัจจุบัน</span><span class="fin-row__value">${val !== null ? formatMoney(val, cur) : "-"}</span></div>
+            ${pl !== null ? `<div class="fin-row"><span class="fin-row__label">กำไร/ขาดทุน</span><span class="fin-row__value ${plClass}">${pl >= 0 ? "+" : ""}${formatMoney(pl, cur)}</span></div>` : ""}
           </div>
           <div class="asset-card__meta">
             <span>${it.source || ""}</span>
@@ -292,13 +307,27 @@ function renderAllocation() {
     return;
   }
   els.allocationSection.hidden = false;
-  els.allocationNote.textContent = state.isOwner ? "ตามมูลค่าปัจจุบัน" : "ตามจำนวนรายการ";
+
+  // ถ้ารายการทั้งหมดเป็นสกุลเงินเดียวกัน ใช้มูลค่ารวมได้ปลอดภัย
+  // ถ้ามีหลายสกุลเงินปนกัน (เช่น หุ้น USD + ทอง THB) การรวมมูลค่าข้ามสกุลเงินจะผิด
+  // จึงถอยไปแสดงตามจำนวนรายการแทน
+  const currenciesUsed = new Set(state.items.map((it) => (it.currency || "THB").toUpperCase()));
+  const canUseValue = state.isOwner && currenciesUsed.size <= 1;
+  const soleCurrency = currenciesUsed.size === 1 ? [...currenciesUsed][0] : null;
+
+  if (state.isOwner && !canUseValue) {
+    els.allocationNote.textContent = "ตามจำนวนรายการ (มีหลายสกุลเงินในพอร์ต)";
+  } else if (canUseValue) {
+    els.allocationNote.textContent = `ตามมูลค่าปัจจุบัน (${soleCurrency})`;
+  } else {
+    els.allocationNote.textContent = "ตามจำนวนรายการ";
+  }
 
   const totals = {};
   TYPE_ORDER.forEach((t) => (totals[t] = 0));
   state.items.forEach((it) => {
     if (totals[it.type] === undefined) return;
-    if (state.isOwner) {
+    if (canUseValue) {
       const val = it.currentValue !== undefined && it.currentValue !== "" ? Number(it.currentValue) : Number(it.totalCost) || 0;
       totals[it.type] += val;
     } else {
@@ -311,7 +340,7 @@ function renderAllocation() {
 
   els.allocationLegend.innerHTML = segments
     .map((s) => {
-      const display = state.isOwner ? "฿" + formatCurrency(s.value) : s.value + " รายการ";
+      const display = canUseValue ? formatMoney(s.value, soleCurrency) : s.value + " รายการ";
       return `<li><span class="dot" style="background:${TYPE_COLOR[s.type]}"></span>${s.type}<span class="legend-value">${display}</span></li>`;
     })
     .join("");
