@@ -8,13 +8,130 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="ledger-bg" aria-hidden="true"></div>
+<!-- ambient candlestick-chart backdrop -->
+<div class="bg-candles" aria-hidden="true">
+  <svg viewBox="0 0 1200 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+<line x1="10.7" y1="767.4" x2="10.7" y2="795.3" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="5.4" y="768.2" width="10.7" height="18.4" fill="var(--candle-up)" rx="1.5"/>
+<line x1="32.1" y1="744.9" x2="32.1" y2="810.4" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="26.8" y="768.2" width="10.7" height="20.9" fill="var(--candle-down)" rx="1.5"/>
+<line x1="53.6" y1="744.0" x2="53.6" y2="802.4" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="48.2" y="746.7" width="10.7" height="42.4" fill="var(--candle-up)" rx="1.5"/>
+<line x1="75.0" y1="739.8" x2="75.0" y2="801.9" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="69.6" y="746.7" width="10.7" height="39.2" fill="var(--candle-down)" rx="1.5"/>
+<line x1="96.4" y1="779.7" x2="96.4" y2="846.0" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="91.1" y="786.0" width="10.7" height="39.5" fill="var(--candle-down)" rx="1.5"/>
+<line x1="117.9" y1="809.0" x2="117.9" y2="844.1" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="112.5" y="816.0" width="10.7" height="9.5" fill="var(--candle-up)" rx="1.5"/>
+<line x1="139.3" y1="781.3" x2="139.3" y2="841.4" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="133.9" y="781.5" width="10.7" height="34.5" fill="var(--candle-up)" rx="1.5"/>
+<line x1="160.7" y1="746.7" x2="160.7" y2="786.4" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="155.4" y="757.5" width="10.7" height="24.0" fill="var(--candle-up)" rx="1.5"/>
+<line x1="182.1" y1="698.3" x2="182.1" y2="760.4" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="176.8" y="709.0" width="10.7" height="48.5" fill="var(--candle-up)" rx="1.5"/>
+<line x1="203.6" y1="682.2" x2="203.6" y2="760.9" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="198.2" y="709.0" width="10.7" height="32.9" fill="var(--candle-down)" rx="1.5"/>
+<line x1="225.0" y1="684.5" x2="225.0" y2="758.8" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="219.6" y="707.5" width="10.7" height="34.3" fill="var(--candle-up)" rx="1.5"/>
+<line x1="246.4" y1="645.6" x2="246.4" y2="724.9" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="241.1" y="657.5" width="10.7" height="50.0" fill="var(--candle-up)" rx="1.5"/>
+<line x1="267.9" y1="601.6" x2="267.9" y2="684.7" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="262.5" y="621.1" width="10.7" height="36.4" fill="var(--candle-up)" rx="1.5"/>
+<line x1="289.3" y1="586.3" x2="289.3" y2="622.5" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="283.9" y="608.5" width="10.7" height="12.6" fill="var(--candle-up)" rx="1.5"/>
+<line x1="310.7" y1="599.4" x2="310.7" y2="631.5" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="305.4" y="608.5" width="10.7" height="20.5" fill="var(--candle-down)" rx="1.5"/>
+<line x1="332.1" y1="625.8" x2="332.1" y2="657.8" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="326.8" y="629.0" width="10.7" height="20.0" fill="var(--candle-down)" rx="1.5"/>
+<line x1="353.6" y1="619.4" x2="353.6" y2="660.7" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="348.2" y="630.9" width="10.7" height="18.1" fill="var(--candle-up)" rx="1.5"/>
+<line x1="375.0" y1="622.5" x2="375.0" y2="682.7" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="369.6" y="630.9" width="10.7" height="22.2" fill="var(--candle-down)" rx="1.5"/>
+<line x1="396.4" y1="614.7" x2="396.4" y2="658.6" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="391.1" y="633.9" width="10.7" height="19.3" fill="var(--candle-up)" rx="1.5"/>
+<line x1="417.9" y1="601.8" x2="417.9" y2="645.9" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="412.5" y="607.0" width="10.7" height="26.9" fill="var(--candle-up)" rx="1.5"/>
+<line x1="439.3" y1="535.2" x2="439.3" y2="624.5" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="433.9" y="555.4" width="10.7" height="51.6" fill="var(--candle-up)" rx="1.5"/>
+<line x1="460.7" y1="506.1" x2="460.7" y2="579.9" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="455.4" y="532.7" width="10.7" height="22.7" fill="var(--candle-up)" rx="1.5"/>
+<line x1="482.1" y1="531.7" x2="482.1" y2="563.0" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="476.8" y="532.7" width="10.7" height="20.4" fill="var(--candle-down)" rx="1.5"/>
+<line x1="503.6" y1="546.4" x2="503.6" y2="599.5" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="498.2" y="553.1" width="10.7" height="16.7" fill="var(--candle-down)" rx="1.5"/>
+<line x1="525.0" y1="519.0" x2="525.0" y2="590.5" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="519.6" y="528.9" width="10.7" height="40.9" fill="var(--candle-up)" rx="1.5"/>
+<line x1="546.4" y1="500.1" x2="546.4" y2="548.0" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="541.1" y="528.9" width="10.7" height="4.6" fill="var(--candle-down)" rx="1.5"/>
+<line x1="567.9" y1="525.8" x2="567.9" y2="568.2" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="562.5" y="533.5" width="10.7" height="17.0" fill="var(--candle-down)" rx="1.5"/>
+<line x1="589.3" y1="532.1" x2="589.3" y2="596.0" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="583.9" y="550.5" width="10.7" height="17.2" fill="var(--candle-down)" rx="1.5"/>
+<line x1="610.7" y1="560.8" x2="610.7" y2="603.4" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="605.4" y="567.7" width="10.7" height="4.3" fill="var(--candle-down)" rx="1.5"/>
+<line x1="632.1" y1="563.0" x2="632.1" y2="573.5" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="626.8" y="565.8" width="10.7" height="6.2" fill="var(--candle-up)" rx="1.5"/>
+<line x1="653.6" y1="546.0" x2="653.6" y2="622.5" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="648.2" y="565.8" width="10.7" height="31.7" fill="var(--candle-down)" rx="1.5"/>
+<line x1="675.0" y1="595.5" x2="675.0" y2="611.6" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="669.6" y="597.5" width="10.7" height="2.1" fill="var(--candle-down)" rx="1.5"/>
+<line x1="696.4" y1="530.7" x2="696.4" y2="630.2" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="691.1" y="547.4" width="10.7" height="52.2" fill="var(--candle-up)" rx="1.5"/>
+<line x1="717.9" y1="507.7" x2="717.9" y2="570.1" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="712.5" y="508.0" width="10.7" height="39.4" fill="var(--candle-up)" rx="1.5"/>
+<line x1="739.3" y1="468.6" x2="739.3" y2="516.4" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="733.9" y="485.6" width="10.7" height="22.4" fill="var(--candle-up)" rx="1.5"/>
+<line x1="760.7" y1="463.5" x2="760.7" y2="499.3" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="755.4" y="467.0" width="10.7" height="18.6" fill="var(--candle-up)" rx="1.5"/>
+<line x1="782.1" y1="436.0" x2="782.1" y2="494.6" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="776.8" y="466.1" width="10.7" height="2.0" fill="var(--candle-up)" rx="1.5"/>
+<line x1="803.6" y1="450.3" x2="803.6" y2="488.9" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="798.2" y="466.1" width="10.7" height="17.1" fill="var(--candle-down)" rx="1.5"/>
+<line x1="825.0" y1="411.5" x2="825.0" y2="492.6" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="819.6" y="438.9" width="10.7" height="44.3" fill="var(--candle-up)" rx="1.5"/>
+<line x1="846.4" y1="401.3" x2="846.4" y2="443.8" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="841.1" y="420.5" width="10.7" height="18.4" fill="var(--candle-up)" rx="1.5"/>
+<line x1="867.9" y1="373.4" x2="867.9" y2="445.1" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="862.5" y="390.4" width="10.7" height="30.1" fill="var(--candle-up)" rx="1.5"/>
+<line x1="889.3" y1="382.3" x2="889.3" y2="400.7" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="883.9" y="382.3" width="10.7" height="8.1" fill="var(--candle-up)" rx="1.5"/>
+<line x1="910.7" y1="353.0" x2="910.7" y2="450.2" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="905.4" y="382.3" width="10.7" height="40.2" fill="var(--candle-down)" rx="1.5"/>
+<line x1="932.1" y1="376.2" x2="932.1" y2="424.4" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="926.8" y="385.9" width="10.7" height="36.6" fill="var(--candle-up)" rx="1.5"/>
+<line x1="953.6" y1="315.0" x2="953.6" y2="388.6" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="948.2" y="344.9" width="10.7" height="41.0" fill="var(--candle-up)" rx="1.5"/>
+<line x1="975.0" y1="338.8" x2="975.0" y2="368.9" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="969.6" y="340.9" width="10.7" height="3.9" fill="var(--candle-up)" rx="1.5"/>
+<line x1="996.4" y1="306.5" x2="996.4" y2="355.9" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="991.1" y="310.5" width="10.7" height="30.4" fill="var(--candle-up)" rx="1.5"/>
+<line x1="1017.9" y1="292.2" x2="1017.9" y2="338.0" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="1012.5" y="300.6" width="10.7" height="10.0" fill="var(--candle-up)" rx="1.5"/>
+<line x1="1039.3" y1="293.9" x2="1039.3" y2="319.6" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="1033.9" y="300.6" width="10.7" height="2.0" fill="var(--candle-down)" rx="1.5"/>
+<line x1="1060.7" y1="269.2" x2="1060.7" y2="312.4" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="1055.4" y="275.6" width="10.7" height="27.0" fill="var(--candle-up)" rx="1.5"/>
+<line x1="1082.1" y1="203.0" x2="1082.1" y2="289.4" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="1076.8" y="223.5" width="10.7" height="52.1" fill="var(--candle-up)" rx="1.5"/>
+<line x1="1103.6" y1="212.7" x2="1103.6" y2="230.6" stroke="var(--candle-up)" stroke-width="1.4"/>
+<rect x="1098.2" y="216.6" width="10.7" height="6.9" fill="var(--candle-up)" rx="1.5"/>
+<line x1="1125.0" y1="198.0" x2="1125.0" y2="233.9" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="1119.6" y="216.6" width="10.7" height="10.1" fill="var(--candle-down)" rx="1.5"/>
+<line x1="1146.4" y1="224.4" x2="1146.4" y2="267.7" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="1141.1" y="226.6" width="10.7" height="21.2" fill="var(--candle-down)" rx="1.5"/>
+<line x1="1167.9" y1="219.3" x2="1167.9" y2="295.3" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="1162.5" y="247.8" width="10.7" height="20.4" fill="var(--candle-down)" rx="1.5"/>
+<line x1="1189.3" y1="260.7" x2="1189.3" y2="324.7" stroke="var(--candle-down)" stroke-width="1.4"/>
+<rect x="1183.9" y="268.2" width="10.7" height="35.3" fill="var(--candle-down)" rx="1.5"/>
+  </svg>
+</div>
+<div class="bg-glow" aria-hidden="true"></div>
 
 <!-- ============ HEADER ============ -->
 <header class="site-header">
@@ -22,36 +139,43 @@
     <div class="brand">
       <span class="eyebrow">PERSONAL LEDGER · MULTI-BROKER TRACKER</span>
       <h1 class="title">บันทึกการลงทุน</h1>
-      <p class="subtitle">รวมประวัติการซื้อหุ้น ทอง และคริปโตเคอร์เรนซี จากทุกแหล่งไว้ในที่เดียว</p>
     </div>
-
-    <div class="header-actions">
-      <button id="ownerToggleBtn" class="btn btn--ghost" type="button">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-        <span id="ownerToggleLabel">เข้าสู่ระบบเจ้าของ</span>
-      </button>
-    </div>
+    <button id="ownerToggleBtn" class="pill-btn pill-btn--outline" type="button">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <span id="ownerToggleLabel">เข้าสู่ระบบเจ้าของ</span>
+    </button>
   </div>
 </header>
 
 <main class="wrap">
 
-  <!-- ============ SUMMARY TICKER ============ -->
-  <section class="summary-strip" id="summaryStrip" aria-label="สรุปพอร์ตการลงทุน">
+  <!-- ============ HERO CARD ============ -->
+  <section class="hero-card" id="heroCard" aria-label="มูลค่าพอร์ตรวม">
     <!-- injected by script.js -->
   </section>
 
-  <!-- ============ FILTERS ============ -->
-  <section class="controls-row">
-    <div class="filter-tabs" id="filterTabs" role="tablist" aria-label="กรองตามประเภทสินทรัพย์">
-      <button class="filter-tab is-active" data-type="all" role="tab" aria-selected="true">ทั้งหมด</button>
-      <button class="filter-tab" data-type="หุ้น" role="tab" aria-selected="false"><span class="dot dot--stock"></span>หุ้น</button>
-      <button class="filter-tab" data-type="ทอง" role="tab" aria-selected="false"><span class="dot dot--gold"></span>ทอง</button>
-      <button class="filter-tab" data-type="คริปโต" role="tab" aria-selected="false"><span class="dot dot--crypto"></span>คริปโต</button>
-      <button class="filter-tab" data-type="อื่นๆ" role="tab" aria-selected="false"><span class="dot dot--other"></span>อื่นๆ</button>
+  <!-- ============ ALLOCATION CARD ============ -->
+  <section class="alloc-card" id="allocCard" hidden>
+    <div class="alloc-head">
+      <h2>สัดส่วนการลงทุน</h2>
     </div>
-    <div class="search-box">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+    <div class="alloc-body">
+      <canvas id="allocChart" width="220" height="220"></canvas>
+      <ul class="alloc-legend" id="allocLegend"></ul>
+    </div>
+  </section>
+
+  <!-- ============ CONTROLS ============ -->
+  <section class="controls-row">
+    <div class="pill-group" id="filterTabs" role="tablist" aria-label="กรองตามประเภทสินทรัพย์">
+      <button class="pill-tab is-active" data-type="all" role="tab" aria-selected="true">ทั้งหมด</button>
+      <button class="pill-tab" data-type="หุ้น" role="tab" aria-selected="false">หุ้น</button>
+      <button class="pill-tab" data-type="ทอง" role="tab" aria-selected="false">ทอง</button>
+      <button class="pill-tab" data-type="คริปโต" role="tab" aria-selected="false">คริปโต</button>
+      <button class="pill-tab" data-type="อื่นๆ" role="tab" aria-selected="false">อื่นๆ</button>
+    </div>
+    <div class="search-pill">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
       <input type="text" id="searchInput" placeholder="ค้นหาชื่อสินทรัพย์...">
     </div>
   </section>
@@ -59,28 +183,18 @@
   <!-- ============ STATE MESSAGES ============ -->
   <div id="statusMessage" class="status-message" hidden></div>
 
-  <!-- ============ ASSET GRID ============ -->
-  <section class="asset-grid" id="assetGrid" aria-live="polite">
+  <!-- ============ ASSET LIST ============ -->
+  <div class="list-head" id="listHead">
+    <span id="listCount">0 สินทรัพย์</span>
+    <span class="list-head__col">มูลค่า/กำไรขาดทุน</span>
+  </div>
+  <section class="asset-list" id="assetList" aria-live="polite">
     <!-- injected by script.js -->
   </section>
 
   <div id="emptyState" class="empty-state" hidden>
     <p>ยังไม่มีรายการในหมวดนี้</p>
   </div>
-
-  <!-- ============ ALLOCATION ============ -->
-  <section class="allocation-section" id="allocationSection" hidden>
-    <div class="allocation-card">
-      <div class="allocation-head">
-        <h2>สัดส่วนพอร์ต</h2>
-        <span class="allocation-note" id="allocationNote">ตามจำนวนรายการ</span>
-      </div>
-      <div class="allocation-body">
-        <canvas id="allocationChart" width="220" height="220"></canvas>
-        <ul class="allocation-legend" id="allocationLegend"></ul>
-      </div>
-    </div>
-  </section>
 
   <p class="footnote">
     ข้อมูลอัปเดตจาก Google Sheets แบบเรียลไทม์ · มุมมองสาธารณะแสดงเฉพาะชื่อและประเภทสินทรัพย์ ไม่แสดงจำนวนเงินหรือมูลค่าที่ถือครอง
@@ -97,17 +211,16 @@
 <div class="modal-overlay" id="modalOverlay" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <button class="modal-close" id="modalClose" type="button" aria-label="ปิด">✕</button>
-    <div class="modal-vault-icon">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15" r="1.6" fill="currentColor" stroke="none"/></svg>
+    <div class="modal-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15" r="1.6" fill="currentColor" stroke="none"/></svg>
     </div>
     <h2 id="modalTitle">เข้าสู่มุมมองเจ้าของ</h2>
     <p class="modal-desc">กรอกรหัสผ่านเพื่อดูจำนวนเงิน ต้นทุน และมูลค่าที่ถือครองทั้งหมด</p>
     <form id="loginForm">
       <input type="password" id="ownerKeyInput" placeholder="รหัสผ่าน" autocomplete="current-password" required>
-      <button type="submit" class="btn btn--primary btn--block" id="loginSubmitBtn">ปลดล็อก</button>
+      <button type="submit" class="pill-btn pill-btn--primary pill-btn--block" id="loginSubmitBtn">ปลดล็อก</button>
     </form>
     <p class="modal-error" id="modalError" hidden>รหัสผ่านไม่ถูกต้อง ลองอีกครั้ง</p>
-    <div class="stamp" id="unlockStamp" hidden>อนุมัติแล้ว</div>
   </div>
 </div>
 
